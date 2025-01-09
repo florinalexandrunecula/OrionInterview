@@ -1,9 +1,13 @@
 from sqlalchemy.orm import Session
+from datetime import datetime
 from app.utils.database import Base, engine
 from app.models.user import User
 from app.utils.security import get_password_hash
+from app.utils.mongodb import client
 
 Base.metadata.create_all(bind=engine)
+DB_NAME = "forum"
+COL_NAME = "posts"
 
 
 def create_admin_user():
@@ -24,4 +28,18 @@ def create_admin_user():
         print("Admin user created successfully.")
 
 
+def populate_mongodb():
+    db = client[DB_NAME]
+    col = db[COL_NAME]
+
+    col.insert_one({
+        "title": "Hello World!",
+        "content": "This post was written automatically",
+        "author": "admin",
+        "created_at": datetime.now(),
+        "updated_at": None
+    })
+
+
 create_admin_user()
+populate_mongodb()
