@@ -57,8 +57,31 @@ def profile(token: str = Depends(oauth2_scheme),
     return response
 
 
-@router.put("/users/{username}/role")
-def change_user_role(username: str, new_role: str, token: str = Depends(oauth2_scheme),
+@router.get("/all_users")
+def get_users(token: str = Depends(oauth2_scheme),
+              db: Session = Depends(dependencies.get_db)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = security.decode_access_token(token)
+        current_user_role = payload.get("role")
+        if current_user_role != "admin":
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Only admins can change user roles",
+            )
+    except JWTError:
+        raise credentials_exception
+
+    users = crud_user.get_users(db)
+    return users
+
+
+@router.put("/{username}/role")
+def change_user_role(username: str, new_role: schemas_user.UserRoleUpdate, token: str = Depends(oauth2_scheme),
                      db: Session = Depends(dependencies.get_db)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -82,6 +105,38 @@ def change_user_role(username: str, new_role: str, token: str = Depends(oauth2_s
             status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
         )
 
-    user.role = new_role
+    user.role = new_role.role
     db.commit()
-    return {"message": f"User '{username}' role changed to '{new_role}' successfully."}
+    return {"message": f"User '{username}' role changed to '{new_role.role}' successfully."}
+
+
+@router.delete("/{username}")
+def delete_user(username: str, token: str = Depends(oauth2_scheme),
+                db: Session = Depends(dependencies.get_db)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = security.decode_access_token(token)
+        current_user_role = payload.get("role")
+        if current_user_role != "admin":
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Only admins can delete user accounts",
+            )
+    except JWTError:
+        raise credentials_exception
+
+    user = crud_user.get_user(db, username)
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+        )
+
+    posts_collection.delete_many({"author": username})
+
+    crud_user.delete_user(db, user)
+
+    return {"message": f"User '{username}' deleted successfully."}

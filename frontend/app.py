@@ -3,6 +3,7 @@ from views.sign_in import sign_in
 from views.sign_up import sign_up
 from views.posts import posts
 from views.profile import profile
+from views.admin import admin
 from utils.auth import is_authenticated, logout, get_username
 
 
@@ -10,12 +11,14 @@ PAGES = {
     "Sign In": sign_in,
     "Sign Up": sign_up,
     "Posts": posts,
-    "Profile": profile
+    "Profile": profile,
+    "Admin": admin
 }
 
 LOGGED_PAGES = {
     "Posts": posts,
-    "Profile": profile
+    "Profile": profile,
+    "Admin": admin
 }
 
 
