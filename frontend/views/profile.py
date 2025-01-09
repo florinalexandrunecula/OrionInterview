@@ -4,6 +4,9 @@ from utils.auth import is_authenticated, get_token
 
 
 def profile():
+    """
+    Implementation of a profile page that displays all the information of the logged user
+    """
     if not is_authenticated():
         st.warning("You need to sign in to view your profile.")
         st.stop()

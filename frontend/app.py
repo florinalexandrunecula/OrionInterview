@@ -15,7 +15,7 @@ PAGES = {
     "Admin": admin
 }
 
-LOGGED_PAGES = {
+LOGGED_IN_PAGES = {
     "Posts": posts,
     "Profile": profile,
     "Admin": admin
@@ -31,7 +31,7 @@ def main():
             st.rerun()
 
     selected_page = st.sidebar.radio("Go to", list(
-        PAGES.keys() if not is_authenticated() else LOGGED_PAGES.keys()))
+        PAGES.keys() if not is_authenticated() else LOGGED_IN_PAGES.keys()))
 
     page = PAGES[selected_page]
     page()

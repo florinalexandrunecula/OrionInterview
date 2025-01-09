@@ -8,6 +8,12 @@ from utils.auth import get_token, is_authenticated
 
 
 def posts():
+    """
+    Implementation of a forum page, with the following functionalities:
+        - The user can see a list of all the posts
+        - The user can add a new post
+        - The user can edit/delete his posts
+    """
     if not is_authenticated():
         st.warning("You need to sign in to view posts.")
         st.stop()
@@ -19,32 +25,6 @@ def posts():
     if "edit_mode" in st.session_state and st.session_state.edit_mode:
         edit_post(token)
         return
-
-    response = get("/forum/posts", token)
-    if isinstance(response, list):
-        for post_dict in response:
-            st.subheader(post_dict["title"])
-            st.write(post_dict["content"])
-            st.write(f"Author: {post_dict['author']}")
-            st.write(f"Created At: {post_dict['created_at']}")
-            if post_dict.get("photo"):
-                image_data = base64.b64decode(post_dict["photo"])
-                image = Image.open(BytesIO(image_data))
-                st.image(image, use_container_width=True)
-
-            if st.button("Edit", key=f"edit_{post_dict['_id']}"):
-                st.session_state.edit_mode = True
-                st.session_state.edit_title = post_dict["title"]
-                st.session_state.edit_id = post_dict["_id"]
-                st.rerun()
-
-            if st.button("Delete", key=f"delete_{post_dict['_id']}"):
-                delete_post(post_dict["_id"], token)
-                st.rerun()
-
-            st.write("---")
-    else:
-        st.error("Failed to load posts")
 
     st.subheader("Create a New Post")
     title = st.text_input("Post Title", key="post_title_input")
@@ -73,8 +53,40 @@ def posts():
                 st.error(
                     "Failed to create post")
 
+    response = get("/forum/posts", token)
+    if isinstance(response, list):
+        for post_dict in response:
+            st.subheader(post_dict["title"])
+            st.write(post_dict["content"])
+            st.write(f"Author: {post_dict['author']}")
+            st.write(f"Created At: {post_dict['created_at']}")
+            if post_dict.get("photo"):
+                image_data = base64.b64decode(post_dict["photo"])
+                image = Image.open(BytesIO(image_data))
+                st.image(image, use_container_width=True)
 
-def edit_post(token):
+            if st.button("Edit", key=f"edit_{post_dict['_id']}"):
+                st.session_state.edit_mode = True
+                st.session_state.edit_title = post_dict["title"]
+                st.session_state.edit_id = post_dict["_id"]
+                st.rerun()
+
+            if st.button("Delete", key=f"delete_{post_dict['_id']}"):
+                delete_post(post_dict["_id"], token)
+                st.rerun()
+
+            st.write("---")
+    else:
+        st.error("Failed to load posts")
+
+
+def edit_post(token: str | None = None):
+    """
+    Implementation of a helper view that contains an editing menu for a post
+
+    Args:
+        token (str | None, optional): The generated JWT token. Defaults to None.
+    """
     title = st.session_state.get("edit_title")
     st.subheader(f"Edit Post: {title}")
     id = st.session_state.get("edit_id")
@@ -122,7 +134,14 @@ def edit_post(token):
         st.rerun()
 
 
-def delete_post(id, token):
+def delete_post(id: str, token: str | None = None):
+    """
+    Helper component responsible for deleting a post
+
+    Args:
+        id (str): id of the post
+        token (str | None, optional): The generated JWT token. Defaults to None.
+    """
     response = delete(f"/forum/posts/{id}", {}, token)
     if response.get("message") == "Post deleted successfully.":
         st.success(f"Post '{id}' deleted successfully!")

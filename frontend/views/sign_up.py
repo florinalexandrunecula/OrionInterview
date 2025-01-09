@@ -5,6 +5,9 @@ from utils.auth import save_token, save_username
 
 
 def sign_up():
+    """
+    Implementation of a sign up page
+    """
     st.title("Sign Up")
 
     username = st.text_input("Username")

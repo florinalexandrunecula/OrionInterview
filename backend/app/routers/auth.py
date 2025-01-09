@@ -13,6 +13,19 @@ def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(dependencies.get_db),
 ):
+    """
+    Route used to login the user
+
+    Args:
+        form_data (OAuth2PasswordRequestForm, optional): data received will contain username and password . Defaults to Depends().
+        db (Session, optional): Connector to the sqlite database. Defaults to Depends(dependencies.get_db).
+
+    Raises:
+        HTTPException: If the username/password combination is invalid, a 401 HTTP Response will be sent
+
+    Returns:
+        dict: A dictionary containing the access_token and the token_type
+    """
     user = crud_user.get_user(db, form_data.username)
     if not user or not security.verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
