@@ -3,8 +3,9 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from typing import List
 from datetime import datetime
+from bson.objectid import ObjectId
 from app.utils.mongodb import get_database
-from app.models.post import Post
+from app.schemas.post import Post, PostUpdate
 from app.utils.security import SECRET_KEY, ALGORITHM
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
@@ -35,34 +36,46 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
         )
 
 
-@router.post("/posts", response_model=Post)
-def create_post(post: Post, current_user: dict = Depends(get_current_user)):
+def convert_post_obj(post):
+    return {
+        **post,
+        "_id": str(post["_id"])
+    }
+
+
+@router.post("/posts")
+def create_post(post: PostUpdate, current_user: dict = Depends(get_current_user)):
     post_data = post.model_dump()
     post_data["author"] = current_user["username"]
+    post_data["created_at"] = datetime.now()
     result = posts_collection.insert_one(post_data)
     if not result.inserted_id:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Post could not be created.")
-    return post
+    return {"message": "Post created successfully."}
 
 
 @router.get("/posts", response_model=List[Post])
 def get_posts(current_user: dict = Depends(get_current_user)):
-    return list(posts_collection.find({}, {"_id": 0}))
+    posts = posts_collection.find()
+    return [
+        convert_post_obj(post)
+        for post in posts
+    ]
 
 
-@router.get("/posts/{title}", response_model=Post)
-def get_post(title: str, current_user: dict = Depends(get_current_user)):
-    post = posts_collection.find_one({"title": title}, {"_id": 0})
+@router.get("/posts/{id}", response_model=Post)
+def get_post(id: str, current_user: dict = Depends(get_current_user)):
+    post = posts_collection.find_one({"_id": ObjectId(id)})
     if not post:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Post not found.")
-    return post
+    return convert_post_obj(post)
 
 
-@router.put("/posts/{title}")
-def update_post(title: str, updated_post: Post, current_user: dict = Depends(get_current_user)):
-    post = posts_collection.find_one({"title": title})
+@router.put("/posts/{id}")
+def update_post(id: str, updated_post: PostUpdate, current_user: dict = Depends(get_current_user)):
+    post = posts_collection.find_one({"_id": ObjectId(id)})
     if not post:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Post not found.")
@@ -75,16 +88,16 @@ def update_post(title: str, updated_post: Post, current_user: dict = Depends(get
     updated_post["updated_at"] = datetime.now()
     updated_post["author"] = post["author"]
     result = posts_collection.update_one(
-        {"title": title}, {"$set": updated_post})
+        {"_id": ObjectId(id)}, {"$set": updated_post})
     if result.modified_count == 0:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="Post not found or no changes made.")
     return {"message": "Post updated successfully."}
 
 
-@router.delete("/posts/{title}")
-def delete_post(title: str, current_user: dict = Depends(get_current_user)):
-    post = posts_collection.find_one({"title": title})
+@router.delete("/posts/{id}")
+def delete_post(id: str, current_user: dict = Depends(get_current_user)):
+    post = posts_collection.find_one({"_id": ObjectId(id)})
     if not post:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Post not found.")
@@ -93,7 +106,7 @@ def delete_post(title: str, current_user: dict = Depends(get_current_user)):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
                             detail="You do not have permission to delete this post.")
 
-    result = posts_collection.delete_one({"title": title})
+    result = posts_collection.delete_one({"_id": ObjectId(id)})
     if result.deleted_count == 0:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Post not found.")
