@@ -17,6 +17,18 @@ posts_collection = db["posts"]
 
 
 def get_current_user(token: str = Depends(oauth2_scheme)):
+    """
+    Method will decode the given token and will extract the information it holds (username, role)
+
+    Args:
+        token (str, optional): The generated JWT token. Defaults to Depends(oauth2_scheme).
+
+    Raises:
+        HTTPException: If any errors occur, a corresponding HTTP Error will be raised
+
+    Returns:
+        dict: The decoded JWT data, in dictionary format
+    """
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username = payload.get("username")
@@ -36,7 +48,16 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
         )
 
 
-def convert_post_obj(post):
+def convert_post_obj(post: dict):
+    """
+    Method is mainly used to replace the data type of "_id" key from bson ObjectId format to str
+
+    Args:
+        post (dict): This is a forum post extracted from the MongoDB
+
+    Returns:
+        dict: The modified post dictionary
+    """
     return {
         **post,
         "_id": str(post["_id"])
@@ -45,6 +66,19 @@ def convert_post_obj(post):
 
 @router.post("/posts")
 def create_post(post: PostUpdate, current_user: dict = Depends(get_current_user)):
+    """
+    Method is used to create a post inside the forum
+
+    Args:
+        post (PostUpdate): The new post that will be saved inside the MongoDB
+        current_user (dict, optional): The user making the request. Defaults to Depends(get_current_user).
+
+    Raises:
+        HTTPException: If the post can't be inserted inside the MongoDB, a 500 HTTP response will be sent
+
+    Returns:
+        dict: A success message
+    """
     post_data = post.model_dump()
     post_data["author"] = current_user["username"]
     post_data["created_at"] = datetime.now()
@@ -57,6 +91,15 @@ def create_post(post: PostUpdate, current_user: dict = Depends(get_current_user)
 
 @router.get("/posts", response_model=List[Post])
 def get_posts(current_user: dict = Depends(get_current_user)):
+    """
+    Method will return all the posts for the forum
+
+    Args:
+        current_user (dict, optional): The user making the request. Defaults to Depends(get_current_user).
+
+    Returns:
+        List[Post]: A list of Post objects
+    """
     posts = posts_collection.find()
     return [
         convert_post_obj(post)
@@ -66,6 +109,19 @@ def get_posts(current_user: dict = Depends(get_current_user)):
 
 @router.get("/posts/{id}", response_model=Post)
 def get_post(id: str, current_user: dict = Depends(get_current_user)):
+    """
+    Method will return the details of a certain post
+
+    Args:
+        id (str): id of the post
+        current_user (dict, optional): The user making the request. Defaults to Depends(get_current_user).
+
+    Raises:
+        HTTPException: If the post is not found, a 404 HTTP response will be sent
+
+    Returns:
+        dict: The post data
+    """
     post = posts_collection.find_one({"_id": ObjectId(id)})
     if not post:
         raise HTTPException(
@@ -75,6 +131,20 @@ def get_post(id: str, current_user: dict = Depends(get_current_user)):
 
 @router.put("/posts/{id}")
 def update_post(id: str, updated_post: PostUpdate, current_user: dict = Depends(get_current_user)):
+    """
+    Method is used to update a certain post
+
+    Args:
+        id (str): id of the post that will be updated
+        updated_post (PostUpdate): The new post data
+        current_user (dict, optional): The user making the request. Defaults to Depends(get_current_user).
+
+    Raises:
+        HTTPException: If any error occur, a corresponding HTTP Response will be sent
+
+    Returns:
+        dict: A success message
+    """
     post = posts_collection.find_one({"_id": ObjectId(id)})
     if not post:
         raise HTTPException(
@@ -97,6 +167,19 @@ def update_post(id: str, updated_post: PostUpdate, current_user: dict = Depends(
 
 @router.delete("/posts/{id}")
 def delete_post(id: str, current_user: dict = Depends(get_current_user)):
+    """
+    Method will delete a certain post
+
+    Args:
+        id (str): id of the post
+        current_user (dict, optional): The user making the request. Defaults to Depends(get_current_user).
+
+    Raises:
+        HTTPException: If any error occur, a corresponding HTTP Response will be sent
+
+    Returns:
+        dict: A success message
+    """
     post = posts_collection.find_one({"_id": ObjectId(id)})
     if not post:
         raise HTTPException(

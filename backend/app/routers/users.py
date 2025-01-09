@@ -16,6 +16,19 @@ posts_collection = db["posts"]
 
 @router.post("/register", response_model=schemas_user.Token)
 def register(user: schemas_user.UserCreate, db: Session = Depends(dependencies.get_db)):
+    """
+    Method used to register a new user
+
+    Args:
+        user (schemas_user.UserCreate): Form data containing user information
+        db (Session, optional): Connector to the sqlite database. Defaults to Depends(dependencies.get_db).
+
+    Raises:
+        HTTPException: If the user can't be created, a 400 HTTP response will be sent
+
+    Returns:
+        dict: A dictionary containing the access_token and token_type
+    """
     if crud_user.get_user(db, user.username):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -31,6 +44,20 @@ def register(user: schemas_user.UserCreate, db: Session = Depends(dependencies.g
 @router.get("/profile")
 def profile(token: str = Depends(oauth2_scheme),
             db: Session = Depends(dependencies.get_db)):
+    """
+    Method is used to return the profile information of a certain user
+
+    Args:
+        token (str, optional): The generated JWT token. Defaults to Depends(oauth2_scheme).
+        db (Session, optional): Connector to the sqlite database. Defaults to Depends(dependencies.get_db).
+
+    Raises:
+        credentials_exception: If the token is invalid, a 401 HTTP response will be sent
+        HTTPException: If the user is not found, a 404 HTTP response will be sent
+
+    Returns:
+        dict: The response contains user data, as well as the number of posts
+    """
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -60,6 +87,20 @@ def profile(token: str = Depends(oauth2_scheme),
 @router.get("/all_users")
 def get_users(token: str = Depends(oauth2_scheme),
               db: Session = Depends(dependencies.get_db)):
+    """
+    Method is used to get a list of all the users present in the database
+
+    Args:
+        token (str, optional): The generated JWT token. Defaults to Depends(oauth2_scheme).
+        db (Session, optional): Connector to the sqlite database. Defaults to Depends(dependencies.get_db).
+
+    Raises:
+        HTTPException: If the user role is not admin, a 403 HTTP response will be sent
+        credentials_exception: If the token is invalid, a 401 HTTP response will be sent
+
+    Returns:
+        list: A list contianing all the users
+    """
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -83,6 +124,22 @@ def get_users(token: str = Depends(oauth2_scheme),
 @router.put("/{username}/role")
 def change_user_role(username: str, new_role: schemas_user.UserRoleUpdate, token: str = Depends(oauth2_scheme),
                      db: Session = Depends(dependencies.get_db)):
+    """
+    Method is used to change the role of a certain user
+
+    Args:
+        username (str): username whose role will be changed
+        new_role (schemas_user.UserRoleUpdate): The form data will contain the new role
+        token (str, optional): The generated JWT token. Defaults to Depends(oauth2_scheme).
+        db (Session, optional): Connector to the sqlite database. Defaults to Depends(dependencies.get_db).
+
+    Raises:
+        HTTPException: If any error occurs, a certain HTTP error response will be sent
+        credentials_exception: If the token is invalid, a 401 HTTP response will be sent
+
+    Returns:
+        dict: A success message
+    """
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -113,6 +170,21 @@ def change_user_role(username: str, new_role: schemas_user.UserRoleUpdate, token
 @router.delete("/{username}")
 def delete_user(username: str, token: str = Depends(oauth2_scheme),
                 db: Session = Depends(dependencies.get_db)):
+    """
+    Method is used to delete a given user
+
+    Args:
+        username (str): username of the user that will be deleted
+        token (str, optional): The generated JWT token. Defaults to Depends(oauth2_scheme).
+        db (Session, optional): Connector to the sqlite database. Defaults to Depends(dependencies.get_db).
+
+    Raises:
+        HTTPException: If any error occurs, a certain HTTP error response will be sent
+        credentials_exception: If the token is invalid, a 401 HTTP response will be sent
+
+    Returns:
+        dict: A success message
+    """
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",

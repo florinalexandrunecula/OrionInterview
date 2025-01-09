@@ -3,6 +3,12 @@ from utils.api import get, put, delete
 from utils.auth import get_token, is_authenticated
 
 def admin():
+    """
+    Implementation of an admin page, with the following functionalities:
+        - Admins can see a list of all non-admin users
+        - They can promote a certain user to admin role
+        - They can delete a certain user
+    """
     if not is_authenticated():
         st.warning("You need to sign in to view this page.")
         st.stop()
