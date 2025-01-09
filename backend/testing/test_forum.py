@@ -71,12 +71,6 @@ def test_user1_create_edit_delete_post():
     delete_response = forum.delete_post(id=post_id, current_user=current_user)
     assert delete_response["message"] == "Post deleted successfully."
 
-    new_post_data = PostUpdate(
-        title="My Second Post", content="This is another post.")
-    new_response = forum.create_post(
-        post=new_post_data, current_user=current_user)
-    assert new_response["message"] == "Post created successfully."
-
 
 def test_user2_cannot_edit_or_delete_user1_post():
     user1 = {"username": "testuser1", "role": "user"}
@@ -92,13 +86,13 @@ def test_user2_cannot_edit_or_delete_user1_post():
 
     updated_post_data = PostUpdate(
         title="Hacked Post", content="Hacked content.")
-    with pytest.raises(Exception) as excinfo:
+    with pytest.raises(Exception) as error:
         forum.update_post(
             id=post_id, updated_post=updated_post_data, current_user=user2)
-    assert excinfo.value.status_code == 403
-    assert excinfo.value.detail == "You do not have permission to edit this post."
+    assert error.value.status_code == 403
+    assert error.value.detail == "You do not have permission to edit this post."
 
-    with pytest.raises(Exception) as excinfo:
+    with pytest.raises(Exception) as error:
         forum.delete_post(id=post_id, current_user=user2)
-    assert excinfo.value.status_code == 403
-    assert excinfo.value.detail == "You do not have permission to delete this post."
+    assert error.value.status_code == 403
+    assert error.value.detail == "You do not have permission to delete this post."

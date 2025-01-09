@@ -79,8 +79,8 @@ def test_register_duplicate_user():
     db = next(override_get_db())
     duplicate_user = UserCreate(username="testuser", password="password123")
 
-    with pytest.raises(HTTPException) as excinfo:
+    with pytest.raises(HTTPException) as error:
         register(user=duplicate_user, db=db)
 
-    assert excinfo.value.status_code == 400
-    assert excinfo.value.detail == "Username already registered"
+    assert error.value.status_code == 400
+    assert error.value.detail == "Username already registered"
