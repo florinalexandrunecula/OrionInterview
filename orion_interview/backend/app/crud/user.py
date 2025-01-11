@@ -7,6 +7,10 @@ def get_user(db: Session, username: str):
     return db.query(User).filter(User.username == username).first()
 
 
+
+
+
+
 def get_users(db: Session):
     return db.query(User).all()
 
