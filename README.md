@@ -35,3 +35,6 @@ This will deploy the frontend application on `http://localhost:8501`.
 ## Testing the App
 ### Backend
 Navigate to `backend` directory and run `pytest testing/`. A small suite of tests is present, showcasing different functionalities of the backend.
+
+### Frontend
+Navigate to `frontend` directory and run `pytest testing/ --headed`. A small suite of tests is present, showcasing different functionalities of the frontend.
