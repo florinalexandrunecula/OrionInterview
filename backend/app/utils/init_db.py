@@ -28,6 +28,24 @@ def create_admin_user():
         print("Admin user created successfully.")
 
 
+def create_testing_user():
+    """
+    Function will populate the database with a testing user
+    if no testing account is present
+    """
+    db = Session(engine)
+    if not db.query(User).filter(User.username == "testuser").first():
+        test_user = User(
+            username="testuser",
+            hashed_password=get_password_hash("password123"),
+            role="user"
+        )
+        db.add(test_user)
+        db.commit()
+        db.close()
+        print("Test user created successfully.")
+
+
 def populate_mongodb():
     db = client[DB_NAME]
     col = db[COL_NAME]
@@ -42,4 +60,5 @@ def populate_mongodb():
 
 
 create_admin_user()
+create_testing_user()
 populate_mongodb()
