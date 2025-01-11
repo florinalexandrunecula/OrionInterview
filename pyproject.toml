@@ -27,3 +27,5 @@ dependencies = [
 run-backend = "backend.run_backend:main"
 run-frontend = "frontend.run_frontend:main"
 init-db = "backend.app.utils.init_db:main"
+run-backend-tests = "backend.run_tests:main"
+run-frontend-tests = "frontend.run_tests:main"
