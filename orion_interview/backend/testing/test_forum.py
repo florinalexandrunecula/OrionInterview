@@ -1,4 +1,5 @@
 import pytest
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from pymongo import MongoClient
@@ -7,7 +8,7 @@ from backend.app.routers import forum
 from backend.app.schemas.post import PostUpdate
 from backend.app.utils.security import get_password_hash
 
-MONGO_URL = "mongodb://localhost:27017"
+MONGO_URL = os.getenv("MONGO_URL", "mongodb://localhost:27017")
 TEST_DB_NAME = "forum_test"
 client = MongoClient(MONGO_URL)
 test_db = client[TEST_DB_NAME]
