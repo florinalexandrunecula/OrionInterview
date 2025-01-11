@@ -4,9 +4,9 @@ from jose import jwt, JWTError
 from typing import List
 from datetime import datetime
 from bson.objectid import ObjectId
-from app.utils.mongodb import get_database
-from app.schemas.post import Post, PostUpdate
-from app.utils.security import SECRET_KEY, ALGORITHM
+from backend.app.utils.mongodb import get_database
+from backend.app.schemas.post import Post, PostUpdate
+from backend.app.utils.security import SECRET_KEY, ALGORITHM
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 

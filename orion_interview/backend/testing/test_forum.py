@@ -2,10 +2,10 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from pymongo import MongoClient
-from app.models.user import Base, User
-from app.routers import forum
-from app.schemas.post import PostUpdate
-from app.utils.security import get_password_hash
+from backend.app.models.user import Base, User
+from backend.app.routers import forum
+from backend.app.schemas.post import PostUpdate
+from backend.app.utils.security import get_password_hash
 
 MONGO_URL = "mongodb://localhost:27017"
 TEST_DB_NAME = "forum_test"
