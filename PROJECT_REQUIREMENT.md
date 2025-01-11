@@ -64,7 +64,7 @@ Build a Python-based web application that demonstrates your ability to design, d
 ### 5. CI/CD Integration (Nice to Have)
 
 - Set up GitHub Actions to:
-  - Run tests automatically (unit, integration, and UI tests).
+  - Run tests automatically (unit, integration, and UI tests).✅
   - Run pre-commit checks for:
     - mypy for type checking.
     - ruff for linting.

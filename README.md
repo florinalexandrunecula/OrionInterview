@@ -46,6 +46,9 @@ Run `run-backend-tests` command. A small suite of tests is present, showcasing d
 In order to test the application frontend, you will need to deploy it using methods described above.
 Run `run-frontend-tests` command. A small suite of tests is present, showcasing different functionalities of the frontend.
 
+### GitHub Actions
+On every push to `main` branch, a routine is called that sets up the Python environment, a MongoDB and runs the Backend tests.
+
 ## Application Overview
 ### Backend API Routes
 #### Authentication Related
