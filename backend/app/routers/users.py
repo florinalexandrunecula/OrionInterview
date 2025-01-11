@@ -78,7 +78,7 @@ def profile(token: str = Depends(oauth2_scheme),
     number_of_posts = posts_collection.count_documents({"author": username})
 
     response = {
-        "user": user,
+        "user": user.as_dict(exclude="hashed_password"),
         "number_of_posts": number_of_posts
     }
     return response
@@ -118,6 +118,7 @@ def get_users(token: str = Depends(oauth2_scheme),
         raise credentials_exception
 
     users = crud_user.get_users(db)
+    users = [user.as_dict(exclude="hashed_password") for user in users]
     return users
 
 
