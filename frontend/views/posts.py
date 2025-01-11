@@ -56,7 +56,7 @@ def posts():
     response = get("/forum/posts", token)
     if isinstance(response, list):
         for post_dict in response:
-            st.subheader(post_dict["title"])
+            st.subheader(f"{post_dict['title']} (ID: {post_dict['_id']})")
             st.write(post_dict["content"])
             st.write(f"Author: {post_dict['author']}")
             st.write(f"Created At: {post_dict['created_at']}")
