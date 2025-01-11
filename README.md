@@ -17,27 +17,29 @@ Clone the repository using
 ### Python environment setup
 If you haven't created a python virtual environment yet, you can create one using `python3.13 -m venv <path_to_venv>` and source it using `source <path_to_venv>/bin/activate`.
 Replace `<path_to_venv>` with a suitable path.
-Inside the root of the repository, run the following command to install all the python packages dependencies `pip install -r requirements.txt`.
+
+### Installing the App
+The app is designed as a Python package. You can install it using `pip install -e .` (inside the root directory of the repository).
 
 ### SQLite and MongoDB setup
-To initialize the databases with data, a script is provided inside `backend/app/utils`. This script will create the SQLite database inside `backend` directory and will populate the MongoDB with a post example. To run the script, use `python -m app.utils.init_db`.
+To initialize the databases with data, a script is provided inside `pyproject.toml`. This script will create the SQLite database inside project root directory and will populate the MongoDB with a post example. To run the script, use `init_db`.
 ###### Note: the code will assume that the MonogDB is locally deployed on `mongodb://localhost:27017`. If you want to provide another DB location, export a new Environment Variable called `MONGO_URL` and populate it with the connection string.
 
 ## Running the App
 ### Backend
-Navigate to `backend` directory and run `uvicorn app.main:app --reload`.
+Run `run-backend` command.
 This will deploy the backend application on `http://127.0.0.1:8000`.
 
 ### Frontend
-Navigate to `frontend` directory and run `streamlit run app.py`.
+Run `run-frontend` command.
 This will deploy the frontend application on `http://localhost:8501`.
 
 ## Testing the App
 ### Backend
-Navigate to `backend` directory and run `pytest testing/`. A small suite of tests is present, showcasing different functionalities of the backend.
+Run `run-backend-tests` command. A small suite of tests is present, showcasing different functionalities of the backend.
 
 ### Frontend
-Navigate to `frontend` directory and run `pytest testing/ --headed`. A small suite of tests is present, showcasing different functionalities of the frontend.
+Run `run-frontend-tests` command. A small suite of tests is present, showcasing different functionalities of the frontend.
 
 ## Application Overview
 ### Backend API Routes
