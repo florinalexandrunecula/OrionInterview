@@ -78,13 +78,13 @@ Build a Python-based web application that demonstrates your ability to design, d
     - Python backend service
     - Frontend service (Streamlit/other)
     - MongoDB service
-    - MariaDB service
+    - MariaDB service => a sqlite db is used
 
   - Optional/Nice-to-Have: Deploy the application on Kubernetes using Minikube.
 
 ### 7. Project Packaging
 
-- Structure the project as a pip package with a setup.py + pyproject.toml files.
+- Structure the project as a pip package with a setup.py + pyproject.toml files.✅
 
 ### 8. Repository and Submission
 
