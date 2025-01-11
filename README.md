@@ -39,9 +39,11 @@ The project also includes a `docker-compose.yaml` file that can be built to full
 
 ## Testing the App
 ### Backend
+The backend testing logic can be ran standalone. No deployment needed.
 Run `run-backend-tests` command. A small suite of tests is present, showcasing different functionalities of the backend.
 
 ### Frontend
+In order to test the application frontend, you will need to deploy it using methods described above.
 Run `run-frontend-tests` command. A small suite of tests is present, showcasing different functionalities of the frontend.
 
 ## Application Overview
