@@ -34,6 +34,9 @@ This will deploy the backend application on `http://127.0.0.1:8000`.
 Run `run-frontend` command.
 This will deploy the frontend application on `http://localhost:8501`.
 
+### Docker (*optional)
+The project also includes a `docker-compose.yaml` file that can be built to fully deploy the app using docker. Run `docker-compose build` and `docker-compose up` to create the containers and then access the application on `http://localhost:8501`.
+
 ## Testing the App
 ### Backend
 Run `run-backend-tests` command. A small suite of tests is present, showcasing different functionalities of the backend.

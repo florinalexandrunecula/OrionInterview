@@ -75,9 +75,9 @@ Build a Python-based web application that demonstrates your ability to design, d
 
   - Use Docker Compose to run:
 
-    - Python backend service
-    - Frontend service (Streamlit/other)
-    - MongoDB service
+    - Python backend service✅
+    - Frontend service (Streamlit/other)✅
+    - MongoDB service✅
     - MariaDB service => a sqlite db is used
 
   - Optional/Nice-to-Have: Deploy the application on Kubernetes using Minikube.
