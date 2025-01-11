@@ -92,7 +92,7 @@ Build a Python-based web application that demonstrates your ability to design, d
 - Include clear documentation covering:
 
   - Project setup and execution.✅
-  - API routes and functionality.
+  - API routes and functionality.✅
   - Testing execution.✅
   - CI/CD pipeline setup (Optional - Nice to have)
   - Optional: Kubernetes deployment instructions.

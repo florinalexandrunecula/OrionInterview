@@ -38,3 +38,22 @@ Navigate to `backend` directory and run `pytest testing/`. A small suite of test
 
 ### Frontend
 Navigate to `frontend` directory and run `pytest testing/ --headed`. A small suite of tests is present, showcasing different functionalities of the frontend.
+
+## Application Overview
+### Backend API Routes
+#### Authentication Related
+- [Login](api_docs/login.md) : `POST /auth/login`
+
+#### User Related
+- [Register](api_docs/register.md) : `POST /users/register`
+- [Profile](api_docs/profile.md): `GET /users/profile`
+- [All Users](api_docs/all_users.md) `GET /users/all_users`
+- [Change Role](api_docs/change_role.md) `PUT /users/{username}/role`
+- [Delete User](api_docs/delete_user.md) `DELETE /users/{username}`
+
+#### Forum Related
+- [Create Post](api_docs/create_post.md) : `POST /forum/posts`
+- [Get Posts](api_docs/get_posts.md) : `GET /forum/posts`
+- [Get Post](api_docs/get_post.md) : `GET /forum/posts/{id}`
+- [Update Post](api_docs/update_post.md) : `PUT /forum/posts/{id}`
+- [Delete Post](api_docs/delete_post.md) : `DELETE /forum/posts/{id}`
