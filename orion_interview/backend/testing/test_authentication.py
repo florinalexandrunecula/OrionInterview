@@ -3,11 +3,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from fastapi import HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
-from app.models.user import Base, User
-from app.utils.security import get_password_hash
-from app.routers.auth import login
-from app.routers.users import register
-from app.schemas.user import UserCreate
+from backend.app.models.user import Base, User
+from backend.app.utils.security import get_password_hash
+from backend.app.routers.auth import login
+from backend.app.routers.users import register
+from backend.app.schemas.user import UserCreate
 
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"

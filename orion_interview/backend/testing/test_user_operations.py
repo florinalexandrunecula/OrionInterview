@@ -1,9 +1,9 @@
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from app.crud.user import get_user, get_users, create_user, delete_user
-from app.models.user import Base, User
-from app.utils.security import verify_password
+from backend.app.crud.user import get_user, get_users, create_user, delete_user
+from backend.app.models.user import Base, User
+from backend.app.utils.security import verify_password
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
 engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={

@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "orion_interview"
+version = "0.1.0"
+description = "A simple forum project with FastAPI backend and Streamlit frontend"
+authors = [{ name = "Alexandru Necula" }]
+
+dependencies = [
+    "fastapi",
+    "passlib",
+    "Pillow",
+    "playwright",
+    "pydantic",
+    "pymongo",
+    "pytest",
+    "python-jose",
+    "requests",
+    "SQLAlchemy",
+    "streamlit",
+    "uvicorn"
+]
+
+[project.scripts]
+run-backend = "backend.run_backend:main"
+run-frontend = "frontend.run_frontend:main"
+init-db = "backend.app.utils.init_db:main"
