@@ -55,10 +55,10 @@ Build a Python-based web application that demonstrates your ability to design, d
 ### 4. Testing
 
 - Backend Testing: Use pytest for unit and integration tests.✅
-- Frontend Testing: Use pytest-playwright to test the UI functionality (e.g., login, post creation).
+- Frontend Testing: Use pytest-playwright to test the UI functionality (e.g., login, post creation).✅
 - Ensure tests cover:
   - User authentication.✅
-  - Role-based access control.
+  - Role-based access control.✅
   - Post creation, editing, and deletion.✅
 
 ### 5. CI/CD Integration (Nice to Have)
