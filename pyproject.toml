@@ -18,6 +18,7 @@ dependencies = [
     "pytest",
     "python-jose",
     "python-multipart",
+    "bcrypt",
     "requests",
     "SQLAlchemy",
     "streamlit",

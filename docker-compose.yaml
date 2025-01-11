@@ -1,0 +1,39 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: orion_interview/backend/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///./forum.db
+      - MONGO_URL=mongodb://mongodb:27017
+    depends_on:
+      - mongodb
+    volumes:
+      - ./backend:/app/backend
+    command: >
+      sh -c "init-db && run-backend"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: orion_interview/frontend/Dockerfile
+    ports:
+      - "8501:8501"
+    environment:
+      - BASE_URL=http://backend:8000
+    volumes:
+      - ./frontend:/app/frontend
+    command: run-frontend
+
+  mongodb:
+    image: mongo:5.0
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:

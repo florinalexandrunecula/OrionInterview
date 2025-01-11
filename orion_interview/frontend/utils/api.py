@@ -1,6 +1,7 @@
 import requests
+import os
 
-BASE_URL = "http://localhost:8000"
+BASE_URL = os.getenv("BASE_URL", "http://localhost:8000")
 
 
 def post(endpoint: str, data: dict, token: str | None = None):
