@@ -118,6 +118,7 @@ def get_users(token: str = Depends(oauth2_scheme),
         raise credentials_exception
 
     users = crud_user.get_users(db)
+    users = [user.as_dict(exclude="hashed_password") for user in users]
     return users
 
 
